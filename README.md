@@ -4,11 +4,17 @@
 
 *Public Domain*
 
-It is simple text editor.
+It is free text editor without advertisement.
 
-*Free.*
+It can read a text file by inputted character code name.
 
-*No advertisement.*
+It can save a text file by inputted character code name and inputted line break.
+
+It can un-do or re-do.
+
+It can search a text by inputted "Regular Expression".
+
+It can replace a first part or replace all of a text by inputted "Regular Expression".
 
 ---
 
@@ -16,8 +22,14 @@ It is simple text editor.
 
 　*パブリック ドメインです。*
 
-　単純なテキスト エディターです。
+　広告無しの無料のテキスト エディターです。
 
-　*無料*
+　文字コードを指定してテキスト ファイルを読み込めます。
 
-　*広告無し*
+　文字コードと改行コードを指定してテキスト ファイルを保存できます。
+　
+　戻す、アン ドゥ、Un-doとやり直す、リ ドゥ、Re-doできます。
+
+　文字パターン「正規表現」で検索できます。
+
+　文字パターン「正規表現」で置換、全置換できます。
