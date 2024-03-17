@@ -27,7 +27,7 @@ It can replace a first part or replace all of a text by inputted "Regular Expres
 　文字コードを指定してテキスト ファイルを読み込めます。
 
 　文字コードと改行コードを指定してテキスト ファイルを保存できます。
-　
+
 　戻す、アンドゥ、Un-doとやり直す、リドゥ、Re-doできます。
 
 　文字パターン「正規表現」で検索できます。
