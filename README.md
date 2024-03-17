@@ -20,4 +20,4 @@ It is simple text editor.
 
 　*無料*
 
- *広告無し*
+　*広告無し*
