@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">SimpleTextEditor</string>
+
+    <string name="read">テキスト ファイル読み込み</string>
+    <string name="edit">編集</string>
+    <string name="copy_all">全コピー</string>
+
+    <string name="character_code_name_default">UTF-8</string>
+    <string name="line_break_default">\\n</string>
+
+    <string name="view">ビュー</string>
+    <string name="save">保存</string>
+    <string name="undo">戻す</string>
+    <string name="redo">やり直す</string>
+    <string name="search">検索</string>
+    <string name="replace">置換</string>
+    <string name="replace_all">全置換</string>
+
+    <string name="editing_file_name_prefix">※</string>
+
+    <string name="empty_search_pattern">文字パターン「正規表現」を検索条件に入力してください。</string>
+    <string name="wrong_search_pattern">検索条件の文字パターン「正規表現」が誤っているので直してください。</string>
+    <string name="search_result_zero">検索結果: ゼロ件</string>
+</resources>
