@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">SimpleTextEditor</string>
+
+    <string name="read">Read</string>
+    <string name="edit">Edit</string>
+    <string name="copy_all">Copy All</string>
+
+    <string name="character_code_name_default">UTF-8</string>
+    <string name="line_break_default">\\n</string>
+
+    <string name="view">View</string>
+    <string name="save">Save</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="search">Search</string>
+    <string name="replace">Replace</string>
+    <string name="replace_all">Replace All</string>
+
+    <string name="editing_file_name_prefix">*</string>
+
+    <string name="empty_search_pattern">The "Regular Expression" of search pattern is empty. Could you input?</string>
+    <string name="wrong_search_pattern">The "Regular Expression" of search pattern is wrong. </string>
+    <string name="search_result_zero">Search Result: Zero Record</string>
+</resources>
