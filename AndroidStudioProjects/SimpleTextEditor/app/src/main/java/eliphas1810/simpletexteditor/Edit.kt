@@ -1,5 +1,6 @@
 package eliphas1810.simpletexteditor
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -14,6 +16,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
 import java.io.OutputStreamWriter
 import java.nio.charset.Charset
+
+
+data class History (
+    var text: String = "",
+    var cursorIndex: Int = 0
+) {
+}
 
 
 class Edit : AppCompatActivity(), TextWatcher {
@@ -41,7 +50,7 @@ class Edit : AppCompatActivity(), TextWatcher {
     var editingFileName: String? = null
 
 
-    private var historyList: MutableList<String>? = mutableListOf()
+    private var historyList: MutableList<History>? = mutableListOf()
     private var historyIndex: Int? = -1
 
 
@@ -111,6 +120,11 @@ class Edit : AppCompatActivity(), TextWatcher {
             setContentView(R.layout.edit)
 
 
+            onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {}
+            })
+
+
             fileNameTextView = findViewById(R.id.editFileName)
 
             characterCodeEditText = findViewById(R.id.editCharacterCodeName)
@@ -132,7 +146,7 @@ class Edit : AppCompatActivity(), TextWatcher {
             editText?.setSelection(getIntent()?.getIntExtra(CURSOR_TEXT_INDEX_KEY, 0)!!)
 
             historyList?.clear()
-            historyList?.add(editText?.text?.toString()!!)
+            historyList?.add(History(editText?.text?.toString()!!, editText?.text?.toString()?.length!!))
             historyIndex = historyList?.size!! - 1
 
             findViewById<Button>(R.id.editUndo).isEnabled = false
@@ -179,7 +193,7 @@ class Edit : AppCompatActivity(), TextWatcher {
                         historyList?.removeLast()
                     }
 
-                    historyList?.add(editText?.text.toString())
+                    historyList?.add(History(editText?.text?.toString()!!, editText?.selectionEnd ?: editText?.text?.toString()?.length!!))
                     historyIndex = historyList?.size!! - 1
 
                     findViewById<Button>(R.id.editUndo).isEnabled = true
@@ -207,8 +221,8 @@ class Edit : AppCompatActivity(), TextWatcher {
 
                     historyIndex = historyIndex!! - 1
 
-                    editText?.setText(historyList?.get(historyIndex!!))
-                    editText?.setSelection(editText?.text?.toString()?.length!! - 1)
+                    editText?.setText(historyList?.get(historyIndex!!)?.text!!)
+                    editText?.setSelection(historyList?.get(historyIndex!!)?.cursorIndex!!)
 
                     findViewById<Button>(R.id.editRedo).isEnabled = true
 
@@ -244,8 +258,8 @@ class Edit : AppCompatActivity(), TextWatcher {
 
                     historyIndex = historyIndex!! + 1
 
-                    editText?.setText(historyList?.get(historyIndex!!))
-                    editText?.setSelection(editText?.text?.toString()?.length!! - 1)
+                    editText?.setText(historyList?.get(historyIndex!!)?.text!!)
+                    editText?.setSelection(historyList?.get(historyIndex!!)?.cursorIndex!!)
 
                     findViewById<Button>(R.id.editUndo).isEnabled = true
 
@@ -354,7 +368,7 @@ class Edit : AppCompatActivity(), TextWatcher {
                         historyList?.removeLast()
                     }
 
-                    historyList?.add(text)
+                    historyList?.add(History(text, startIndex + replaceText.length))
                     historyIndex = historyList?.size!! - 1
 
                     editText?.setText(text)
@@ -406,10 +420,15 @@ class Edit : AppCompatActivity(), TextWatcher {
                         historyList?.removeLast()
                     }
 
-                    historyList?.add(text)
+                    var cursorIndex = editText?.selectionEnd ?: 0
+                    if (text?.length!! < cursorIndex) {
+                        cursorIndex = text?.length!!
+                    }
+                    historyList?.add(History(text,  cursorIndex))
                     historyIndex = historyList?.size!! - 1
 
                     editText?.setText(text)
+                    editText?.setSelection(cursorIndex)
 
                     fileNameTextView?.text = editingFileName
 
@@ -470,42 +489,6 @@ class Edit : AppCompatActivity(), TextWatcher {
     }
 
 
-    override fun onKeyDown(keyCode: Int, keyEvent: KeyEvent?): Boolean {
-
-        if (keyCode != KeyEvent.KEYCODE_BACK) {
-            return super.onKeyDown(keyCode, keyEvent)
-        }
-
-        try {
-
-            historyList?.clear()
-            historyIndex = -1
-
-            findViewById<Button>(R.id.editUndo).isEnabled = false
-            findViewById<Button>(R.id.editRedo).isEnabled = false
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(FILE_NAME_KEY, fileName)
-            intent.putExtra(CHARACTER_CODE_KEY, characterCodeEditText?.text?.toString())
-            intent.putExtra(LINE_BREAK_KEY, lineBreakEditText?.text?.toString())
-            intent.putExtra(TEXT_KEY, editText?.text.toString())
-            setResult(RESULT_OK, intent)
-
-            fileName = null
-            editingFileName = null
-
-            finish()
-
-        } catch (exception: Exception) {
-            Toast.makeText(applicationContext, exception.toString(), Toast.LENGTH_LONG).show()
-            throw exception
-        } finally {
-
-            return super.onKeyDown(keyCode, keyEvent)
-        }
-    }
-
-
     //EditTextのtextが変更されている時に1度だけ、変更前のtextなどを渡されて起動されます。
     override fun beforeTextChanged(text: CharSequence?, index: Int, changedSize: Int, addedSize: Int) {
     }
@@ -524,7 +507,7 @@ class Edit : AppCompatActivity(), TextWatcher {
                 return
             }
 
-            val lastText = historyList?.get(historyIndex!!)!!
+            val lastText = historyList?.get(historyIndex!!)?.text!!
 
             if (lastText == text?.toString()) {
                 return
@@ -534,7 +517,7 @@ class Edit : AppCompatActivity(), TextWatcher {
                 historyList?.removeLast()
             }
 
-            historyList?.add(text?.toString()!!)
+            historyList?.add(History(text?.toString() ?: "", editText?.selectionEnd ?: text?.toString()?.length ?: 0))
             historyIndex = historyList?.size!! - 1
 
             fileNameTextView?.text = editingFileName
