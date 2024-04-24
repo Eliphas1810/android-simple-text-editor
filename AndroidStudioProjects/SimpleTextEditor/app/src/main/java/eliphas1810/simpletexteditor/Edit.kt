@@ -1,12 +1,10 @@
 package eliphas1810.simpletexteditor
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
@@ -14,13 +12,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
+import java.io.BufferedWriter
 import java.io.OutputStreamWriter
 import java.nio.charset.Charset
 
 
+//テキスト編集履歴
 data class History (
-    var text: String = "",
-    var cursorIndex: Int = 0
+    var text: String = "", //テキスト編集履歴を保持した時点のテキスト
+    var cursorIndex: Int = 0 //テキスト編集履歴を保持した時点のテキスト内のカーソルのインデックス番号
 ) {
 }
 
@@ -47,10 +47,10 @@ class Edit : AppCompatActivity(), TextWatcher {
 
 
     var fileName: String? = null
-    var editingFileName: String? = null
+    var editingFileName: String? = null //テキスト編集中を表すためのファイル名
 
 
-    private var historyList: MutableList<History>? = mutableListOf()
+    private var historyList: MutableList<History>? = mutableListOf() //テキスト編集履歴の一覧
     private var historyIndex: Int? = -1
 
 
@@ -107,8 +107,11 @@ class Edit : AppCompatActivity(), TextWatcher {
                 characterCode = getString(R.string.character_code_name_default)
             }
 
-            OutputStreamWriter(contentResolver.openOutputStream(uri!!), characterCode).use {
-                it.write(text)
+            //contentResolver.openOutputStream()で"wt"モードを指定しないと、書き込み前のテキストの文字数が大きい場合、書き込み前のテキストの先頭の一部を置換するような形に成ってしまいます。
+            OutputStreamWriter(contentResolver.openOutputStream(uri!!, "wt"), characterCode).use {
+                BufferedWriter(it).use {
+                    it.write(text)
+                }
             }
         }
     }
@@ -120,6 +123,7 @@ class Edit : AppCompatActivity(), TextWatcher {
             setContentView(R.layout.edit)
 
 
+            //戻るボタン、戻るジェスチャーを無効化
             onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {}
             })
