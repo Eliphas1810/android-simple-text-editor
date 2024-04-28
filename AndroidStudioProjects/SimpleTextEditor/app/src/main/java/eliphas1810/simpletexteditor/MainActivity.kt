@@ -30,15 +30,11 @@ private class Adapter(context: Context, lineList: List<String>, ): ArrayAdapter<
                 view = LayoutInflater.from(context).inflate(R.layout.view_line, viewGroup, false)
             }
 
-            var lineNumber = "" + (position + 1)
-            lineNumber = lineNumber.padStart(maxLineNumberSize, ' ')
-            lineNumber += "    "
-
             var line = getItem(position)
-            line = line?.padEnd(80, ' ')
 
-            view?.findViewById<TextView>(R.id.viewLineNumber)?.text = lineNumber
-            view?.findViewById<TextView>(R.id.viewLine)?.text = line
+            var lineNumber = "" + (position + 1)
+
+            view?.findViewById<TextView>(R.id.viewLine)?.text = lineNumber + "    " + line
 
         } catch (exception: Exception) {
             Toast.makeText(view?.context?.applicationContext, exception.toString(), Toast.LENGTH_LONG).show()
