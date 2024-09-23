@@ -16,6 +16,10 @@ It can search a text by inputted "Regular Expression".
 
 It can replace a first part or replace all of a text by inputted "Regular Expression".
 
+It could edit a file of 113.5KB, 1863 lines and 37684 characters, on the smartphone, AQUOS sense3.
+
+It can not edit a file of 682.2KB, on the smartphone, AQUOS sense3.
+
 ---
 
 ## 概要
@@ -33,3 +37,7 @@ It can replace a first part or replace all of a text by inputted "Regular Expres
 　文字パターン「正規表現」で検索できます。
 
 　文字パターン「正規表現」で置換、全置換できます。
+
+　AQUOS sense3というスマホで、113.5キロ バイト、1863行、37684文字のテキスト ファイルを編集できました。
+
+　AQUOS sense3というスマホで、682.2キロ バイトの「法華経の現代語訳」のテキスト ファイルを編集できず、当アプリは強制異常終了しました。
